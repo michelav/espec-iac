@@ -1,0 +1,41 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "A sample template"
+Parameters:
+  InstanceType:
+    Description: "Tipo de instancia"
+    Type: String
+    Default: "t2.micro"
+    AllowedValues:
+      - "t1.micro"
+      - "t1.small"
+      - "t2.micro"
+    ConstraintDescription: "Deve ser uma instancia valida"
+  KeyName:
+    Description: "EC2 Key Pair"
+    Type: "AWS::EC2::KeyPair::KeyName"
+    ConstraintDescription: "Deve ser uma Key Pair valido"
+Resources:
+  MyWebServer:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-3885d854
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+  MyDBServer:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-3885d854
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+Outputs:
+  MyServerURL:
+    Description: URL for newly created Server stack
+    Value:
+      Fn::Join:
+      - ''
+      - - http://
+        - Fn::GetAtt:
+          - MyWebServer
+          - PublicDnsName
+
