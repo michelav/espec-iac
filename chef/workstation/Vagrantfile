@@ -4,14 +4,18 @@
 $script = <<-SCRIPT
 echo Provisionando...
 apt-get update
-apt-get install -y curl
+apt-get install -y curl git zip unzip
 curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -c stable -v 3.1.0
 chef -v
+wget https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip
+unzip terraform_0.11.7_linux_amd64.zip
+mv terraform /usr/local/bin
+apt-get clean
 SCRIPT
 
 Vagrant.configure("2") do |config|
 	config.vm.box = "bento/ubuntu-18.04"
 	config.vm.provision "shell", inline: $script
-	config.vm.synced_folder ".", "/home/vagrant/iac", create: true
+	config.vm.synced_folder "/home/michel/devel/iac/", "/home/vagrant/iac", create: true
 end
 
