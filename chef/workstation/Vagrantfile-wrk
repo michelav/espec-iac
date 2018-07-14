@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$script = <<-SCRIPT
+echo Provisionando...
+apt-get update
+apt-get install -y curl
+curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -c stable -v 3.1.0
+chef -v
+SCRIPT
+
+Vagrant.configure("2") do |config|
+	config.vm.box = "bento/ubuntu-18.04"
+	config.vm.provision "shell", inline: $script
+	config.vm.synced_folder ".", "/home/vagrant/iac", create: true
+end
+
