@@ -15,6 +15,12 @@ variable "instance" {
   default = "t2.micro"
 }
 
+variable "ssh_public_key" {
+  type = "string"
+  description = "O caminho da chave ssh"
+  default = "ssh.pem"
+}
+
 resource "aws_instance" "workstation" {
   ami = "${var.ami}"
 
@@ -62,7 +68,7 @@ resource "aws_security_group" "wrk-sec-group" {
 
 resource "aws_key_pair" "auth" {
   key_name   = "iac"
-  public_key = "${file("~/devel/keys/terraform.key.pub")}"
+  public_key = "${file("${var.ssh_public_key}")}"
 }
 
 output "workstation-ip" {
